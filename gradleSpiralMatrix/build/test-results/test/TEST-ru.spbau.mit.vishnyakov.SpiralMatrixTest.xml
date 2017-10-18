@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ru.spbau.mit.vishnyakov.SpiralMatrixTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2017-09-27T17:40:19" hostname="kirill-K501LB" time="0.026">
+  <properties/>
+  <testcase name="sortingByRows_1x1" classname="ru.spbau.mit.vishnyakov.SpiralMatrixTest" time="0.006"/>
+  <testcase name="sortingByRows_3x3" classname="ru.spbau.mit.vishnyakov.SpiralMatrixTest" time="0.003"/>
+  <testcase name="sortMatrixByColumns_1x1" classname="ru.spbau.mit.vishnyakov.SpiralMatrixTest" time="0.001"/>
+  <testcase name="sortMatrixByColumns_3x3" classname="ru.spbau.mit.vishnyakov.SpiralMatrixTest" time="0.0"/>
+  <testcase name="sortingByRows_3x3_startingElementsAreEqual" classname="ru.spbau.mit.vishnyakov.SpiralMatrixTest" time="0.001"/>
+  <testcase name="transposeMatrix_1x1" classname="ru.spbau.mit.vishnyakov.SpiralMatrixTest" time="0.0"/>
+  <testcase name="transposeMatrix_3x3" classname="ru.spbau.mit.vishnyakov.SpiralMatrixTest" time="0.0"/>
+  <testcase name="transposeMatrix_5x5" classname="ru.spbau.mit.vishnyakov.SpiralMatrixTest" time="0.001"/>
+  <testcase name="spiralOutput_1x1" classname="ru.spbau.mit.vishnyakov.SpiralMatrixTest" time="0.0"/>
+  <testcase name="spiralOutput_3x3" classname="ru.spbau.mit.vishnyakov.SpiralMatrixTest" time="0.003"/>
+  <testcase name="spiralOutput_5x5" classname="ru.spbau.mit.vishnyakov.SpiralMatrixTest" time="0.0"/>
+  <testcase name="sortMatrixByColumns_3x3_startingElementsAreEqual" classname="ru.spbau.mit.vishnyakov.SpiralMatrixTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
