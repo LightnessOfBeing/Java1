@@ -19,14 +19,9 @@ public class HashMap {
     private int size = 0;
 
     /**
-     * Capacity of HashTable
-     */
-
-    private int capacity;
-
-    /**
      * ReHash threshold.
      */
+
     private final double reHashRatio = 0.5;
 
     /**
@@ -38,11 +33,8 @@ public class HashMap {
      * Default constructor.
      */
 
-    public HashMap(){
-
+    public HashMap() {
         array = new MyLinkedList[INITIAL_SIZE];
-        capacity = INITIAL_SIZE;
-
     }
 
     /**
@@ -50,18 +42,15 @@ public class HashMap {
      * @param capacity capacity
      */
 
-    public HashMap(int capacity){
-
+    public HashMap(int capacity) {
         array = new MyLinkedList[capacity];
-        this.capacity = capacity;
-
     }
 
     /**
      * @return number of elements in HashTable.
      */
 
-    public int size(){
+    public int size() {
         return size;
     }
 
@@ -72,10 +61,10 @@ public class HashMap {
 
     public boolean contains(String key) {
 
-        int index = Math.abs(key.hashCode()) % capacity;
+        int index = Math.abs(key.hashCode()) % array.length;
         MyLinkedList list = array[index];
 
-        return list != null && list.getHead() != null && list.find(key) != null;
+        return list != null && list.find(key) != null;
 
     }
 
@@ -85,12 +74,12 @@ public class HashMap {
      * @return The previous value of the String that was associated with the given key, null in case there was no such String.
      */
 
-    public String put(String key, String value){
+    public String put(String key, String value) {
 
         rehash();
 
-        int index = Math.abs(key.hashCode()) % capacity;
-        if (array[index] == null){
+        int index = Math.abs(key.hashCode()) % array.length;
+        if (array[index] == null) {
            array[index] = new MyLinkedList();
         }
 
@@ -107,10 +96,10 @@ public class HashMap {
      * @return String which is associated with the given key, null in case there was no such String.
      */
 
-    public String get(String key){
+    public String get(String key) {
 
-        int index = Math.abs(key.hashCode()) % capacity;
-        if(array[index] == null) {
+        int index = Math.abs(key.hashCode()) % array.length;
+        if (array[index] == null) {
             return null;
         }
 
@@ -123,13 +112,13 @@ public class HashMap {
      * @return String that was associated with the given key, null in case there was no such String.
      */
 
-    public String remove(String key){
+    public String remove(String key) {
 
         if (!contains(key)) {
             return null;
         }
 
-        int index = Math.abs(key.hashCode()) % capacity;
+        int index = Math.abs(key.hashCode()) % array.length;
 
         size--;
 
@@ -144,7 +133,7 @@ public class HashMap {
      * Clears the HashTable.
      */
 
-    public void clear(){
+    public void clear() {
 
         for (int i = 0; i < size; i++) {
             array[i] = null;
@@ -157,41 +146,23 @@ public class HashMap {
      * @return True if reHash occurred, otherwise False.
      */
 
-    public boolean rehash(){
+    public boolean rehash() {
 
-        if ((double) size/capacity < reHashRatio) {
+        if ((double) size / array.length < reHashRatio) {
             return false;
         }
 
-        int oldCapacity = capacity;
-        capacity *= 2;
-        MyLinkedList[] newArray = new MyLinkedList[capacity];
+        MyLinkedList[] newArray = new MyLinkedList[array.length * 2];
 
-        for (int i = 0; i < oldCapacity; i++){
-            if (array[i] != null) {
-                MyLinkedList.Node curNode = array[i].getHead();
-
-                while (curNode != null) {
-                    int index = Math.abs(curNode.getKey().hashCode()) % capacity;
-
-                    if (newArray[index] == null) {
-                        newArray[index] = new MyLinkedList(curNode);
-                    }
-                    else {
-                        array[index].add(curNode.getKey(), curNode.getValue());
-                    }
-                    curNode = curNode.getNext();
-                }
+        for (MyLinkedList anArray : array) {
+            if (anArray != null) {
+                anArray.rehash(newArray, array.length * 2);
             }
         }
 
         array = newArray;
 
         return true;
-    }
-
-    public int getCapacity(){
-        return capacity;
     }
 
 }

@@ -14,7 +14,7 @@ class MyLinkedList {
      * Nested class that represents node of a Linked list.
      */
 
-    static class Node{
+    static class Node {
 
         /**
          * Key and value that are being stored in Node.
@@ -34,7 +34,7 @@ class MyLinkedList {
          * Constructor which receives key-value pair.
          */
 
-        Node(String k, String val){
+        Node(String k, String val) {
 
             key = k;
             value = val;
@@ -42,15 +42,15 @@ class MyLinkedList {
 
         }
 
-        public Node getNext(){
+        public Node getNext() {
             return next;
         }
 
-        public String getKey(){
+        public String getKey() {
             return key;
         }
 
-        public String getValue(){
+        public String getValue() {
             return value;
         }
 
@@ -67,7 +67,7 @@ class MyLinkedList {
      * @param node Node.
      */
 
-    MyLinkedList(Node node){
+    MyLinkedList(Node node) {
         head = node;
     }
 
@@ -75,7 +75,7 @@ class MyLinkedList {
      * Default constructor.
      */
 
-    MyLinkedList(){
+    MyLinkedList() {
         head = null;
     }
 
@@ -88,7 +88,7 @@ class MyLinkedList {
      * @return String which represented previous value, with the key == newNode.getKey().
      */
 
-    public String add(String key, String value){
+    public String add(String key, String value) {
 
         String was = find(key);
         Node node = head;
@@ -118,7 +118,7 @@ class MyLinkedList {
 
     }
 
-    public Node getHead(){
+    public Node getHead() {
         return head;
     }
 
@@ -128,7 +128,11 @@ class MyLinkedList {
      * @return null if key were already associated with some value, otherwise value associated with the given key.
      */
 
-    public String find(String key){
+    public String find(String key) {
+        if (this.getHead() == null) {
+            return null;
+        }
+
         Node node = head;
 
         while (node != null && !node.key.equals(key)) {
@@ -150,7 +154,7 @@ class MyLinkedList {
      * @return previous value that wsa associated with the given key.
      */
 
-    public String remove(String key){
+    public String remove(String key) {
 
         if (find(key) == null) {
             return null;
@@ -174,6 +178,19 @@ class MyLinkedList {
         node.next = node.next.next;
 
         return was;
+    }
+
+    void rehash(MyLinkedList[] newArray, int capacity) {
+        Node curNode = head;
+
+        while (curNode != null) {
+            int index = Math.abs(curNode.getKey().hashCode()) % capacity;
+            if (newArray[index] == null) {
+                newArray[index] = new MyLinkedList();
+            }
+            newArray[index].add(curNode.getKey(), curNode.getValue());
+            curNode = curNode.getNext();
+        }
     }
 
 }

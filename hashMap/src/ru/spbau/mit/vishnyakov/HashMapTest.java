@@ -72,7 +72,7 @@ public class HashMapTest {
 
         HashMap ma = new HashMap();
 
-        assertEquals(false, ma.contains("1"));
+        assertFalse(ma.contains("1"));
 
     }
 
@@ -83,12 +83,12 @@ public class HashMapTest {
 
         ma.put("1", "a");
 
-        assertEquals(true, ma.contains("1"));
+        assertTrue(ma.contains("1"));
 
         ma.put("1", "b");
 
-        assertEquals(true, ma.contains("1"));
-        assertEquals(false, ma.contains("2"));
+        assertTrue(ma.contains("1"));
+        assertFalse(ma.contains("2"));
 
     }
 
@@ -102,10 +102,10 @@ public class HashMapTest {
         ma.put("1", "b");
 
         ma.remove("1");
-        assertEquals(false, ma.contains("1"));
+        assertFalse(ma.contains("1"));
 
         ma.put("1", "a");
-        assertEquals(true, ma.contains("1"));
+        assertTrue(ma.contains("1"));
     }
 
     @org.junit.Test
@@ -113,7 +113,7 @@ public class HashMapTest {
 
         HashMap ma = new HashMap();
 
-        assertEquals(null, ma.put("1", "a"));
+        assertNull(ma.put("1", "a"));
     }
 
     @org.junit.Test
@@ -123,7 +123,7 @@ public class HashMapTest {
 
         ma.put("1", "a");
 
-        assertEquals(true, ma.contains("1"));
+        assertTrue(ma.contains("1"));
         assertEquals("a", ma.put("1", "b"));
 
     }
@@ -136,7 +136,7 @@ public class HashMapTest {
         ma.put("1", "b");
         ma.remove("1");
 
-        assertEquals(null, ma.put("1", "c"));
+        assertNull(ma.put("1", "c"));
 
     }
 
@@ -145,7 +145,7 @@ public class HashMapTest {
 
         HashMap ma = new HashMap();
 
-        assertEquals(null, ma.get("1"));
+        assertNull(ma.get("1"));
 
     }
 
@@ -172,7 +172,7 @@ public class HashMapTest {
         ma.put("1", "b");
         ma.remove("1");
 
-        assertEquals(null, ma.get("1"));
+        assertNull(ma.get("1"));
 
     }
 
@@ -207,14 +207,14 @@ public class HashMapTest {
         ma.put("1", "a");
         ma.put("2", "b");
 
-        int curCapacity = ma.getCapacity();
-
         ma.rehash();
 
-        assertEquals(2 * curCapacity, ma.getCapacity());
+        assertFalse( ma.rehash());
+        assertFalse( ma.rehash());
 
-        assertEquals(false, ma.rehash());
-        assertEquals(2 * curCapacity, ma.getCapacity());
+        assertTrue(ma.contains("1"));
+        assertTrue(ma.contains("2"));
+        assertFalse(ma.contains("3"));
     }
 
 }
