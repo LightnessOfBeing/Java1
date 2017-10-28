@@ -9,12 +9,6 @@ import java.util.Arrays;
 public class SpiralMatrix {
 
     /**
-     * n - denotes size of array.
-     */
-
-    private final int n;
-
-    /**
      * 2d array that represents matrix.
      */
 
@@ -23,18 +17,26 @@ public class SpiralMatrix {
     /**
      * Constructor which receives size of matrix and its elements.
      * @param array - array of which matrix is being constructed.
-     * @param n - size of matrix.
      */
 
-    SpiralMatrix(int n, int[][] array){
+    public SpiralMatrix(int[][] array) {
 
-        this.n = n;
+        if (array == null || array.length % 2 == 0) {
+            throw new IllegalArgumentException("It's not a correct input!");
+        }
+
+        for (int[] a : array) {
+            if (a.length != array.length) {
+                throw new IllegalArgumentException("It's not a correct input!");
+            }
+        }
+
+        int n = array.length;
         matrix = new int[n][n];
 
         for (int i = 0; i < n; i++) {
             System.arraycopy(array[i], 0, matrix[i], 0, n);
         }
-
     }
 
     /**
@@ -49,8 +51,9 @@ public class SpiralMatrix {
      * @return string that represents order of output.
      */
 
-    public String spiralOutput(){
+    public String spiralOutput() {
 
+        int n = matrix.length;
         int curRow = n / 2;
         int curCol = n / 2;
         int counter = 0; //number of moves we've made
@@ -60,8 +63,8 @@ public class SpiralMatrix {
 
         StringBuilder result = new StringBuilder();
 
-        while (counter < n * n){
-            if (direction == 0){
+        while (counter < n * n) {
+            if (direction == 0) {
                 for (int i = 0; i < top; i++) {
                     result.append(matrix[curRow][curCol]).append(" ");
                     curRow--;
@@ -70,7 +73,7 @@ public class SpiralMatrix {
                 direction = 1;
                 down = top + 1;
             }
-            else if (direction == 1){
+            else if (direction == 1) {
                 for (int i = 0; i < right; i++) {
                     result.append(matrix[curRow][curCol]).append(" ");
                     curCol++;
@@ -79,7 +82,7 @@ public class SpiralMatrix {
                 direction = 2;
                 left = right + 1;
             }
-            else if (direction == 2){
+            else if (direction == 2) {
                 for (int i = 0; i < down; i++) {
                     result.append(matrix[curRow][curCol]).append(" ");
                     curRow++;
@@ -88,7 +91,7 @@ public class SpiralMatrix {
                 direction = 3;
                 top = down + 1;
             }
-            else{
+            else {
                 for (int i = 0; i < left; i++) {
                     result.append(matrix[curRow][curCol]).append(" ");
                     curCol--;
@@ -98,9 +101,7 @@ public class SpiralMatrix {
                 right = left + 1;
             }
         }
-
         return result.toString();
-
     }
 
 
@@ -109,8 +110,9 @@ public class SpiralMatrix {
      * I wanted to make this method private, but in this case there is no option to test this method.
      */
 
-    void transposeMatrix(){
+    public void transposeMatrix() {
 
+        int n = matrix.length;
         int [][] transposedMatrix = new int[n][n];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
@@ -118,7 +120,6 @@ public class SpiralMatrix {
             }
         }
         matrix = transposedMatrix;
-
     }
 
     /**
@@ -126,7 +127,7 @@ public class SpiralMatrix {
      * I wanted to make this method private, but in this case there is no option to test this method.
      */
 
-    void sortMatrixByRows(){
+    public void sortMatrixByRows() {
 
         Arrays.sort(matrix, (a, b) -> {
 
@@ -145,9 +146,7 @@ public class SpiralMatrix {
             }
 
             return -1;
-
         });
-
     }
 
 
@@ -155,7 +154,7 @@ public class SpiralMatrix {
      * Method that sorts matrix by columns.
      */
 
-    public void sortMatrixByColumns(){
+    public void sortMatrixByColumns() {
 
         this.transposeMatrix();
         this.sortMatrixByRows();
@@ -168,18 +167,18 @@ public class SpiralMatrix {
      * Method that outputs matrix in the default way.
      */
 
-    public void simpleOutput(){
+    public void simpleOutput() {
 
+        int n = matrix.length;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 System.out.print(matrix[i][j] + " ");
             }
             System.out.println();
         }
-
     }
 
-    public int[][] getMatrix(){
+    public int[][] getMatrix() {
         return matrix;
     }
 }
