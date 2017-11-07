@@ -8,6 +8,12 @@ import static org.junit.Assert.*;
 
 public class TrieTest {
 
+    @Test(expected = IllegalArgumentException.class)
+    public void addNull() throws Exception {
+        Trie t = new Trie();
+        t.add(null);
+    }
+
     @Test
     public void sizeEmptyTrie() throws Exception {
         Trie t = new Trie();
@@ -30,7 +36,7 @@ public class TrieTest {
         t.add("a");
         t.add("b");
         t.add("c");
-        assertEquals(3, t.size());
+        assertEquals(3, t.howManyStartsWithPrefix(""));
     }
 
     @Test
@@ -112,7 +118,7 @@ public class TrieTest {
         Trie t = new Trie();
 
         t.add("a");
-        assertEquals(true, t.contains("a"));
+        assertTrue(t.contains("a"));
     }
 
     @Test
@@ -120,10 +126,10 @@ public class TrieTest {
         Trie t = new Trie();
 
         t.add("a");
-        assertEquals(true, t.contains("a"));
+        assertTrue(t.contains("a"));
 
         t.add("b");
-        assertEquals(true, t.contains("b"));
+        assertTrue(t.contains("b"));
     }
 
     @Test
@@ -131,10 +137,10 @@ public class TrieTest {
         Trie t = new Trie();
 
         t.add("a");
-        assertEquals(true, t.contains("a"));
+        assertTrue(t.contains("a"));
 
         t.add("a");
-        assertEquals(true, t.contains("a"));
+        assertTrue(t.contains("a"));
     }
 
     @Test
@@ -142,16 +148,16 @@ public class TrieTest {
         Trie t = new Trie();
 
         t.add("addd");
-        assertEquals(true, t.contains("addd"));
+        assertTrue(t.contains("addd"));
 
         t.add("add1a");
-        assertEquals(true, t.contains("add1a"));
+        assertTrue(t.contains("add1a"));
 
         t.add("add1a312");
-        assertEquals(true, t.contains("add1a312"));
+        assertTrue(t.contains("add1a312"));
 
         t.add("abba");
-        assertEquals(true, t.contains("abba"));
+        assertTrue(t.contains("abba"));
     }
 
     @Test
@@ -159,10 +165,10 @@ public class TrieTest {
         Trie t = new Trie();
 
         t.add("a");
-        assertEquals(true, t.contains("a"));
+        assertTrue(t.contains("a"));
 
         t.remove("a");
-        assertEquals(false, t.contains("a"));
+        assertFalse(t.contains("a"));
     }
 
     @Test
@@ -176,16 +182,16 @@ public class TrieTest {
 
         t.remove("aaa");
 
-        assertEquals(false, t.contains("aaa"));
-        assertEquals(true, t.contains("aaabc"));
-        assertEquals(true, t.contains("aaabb"));
-        assertEquals(true, t.contains("d"));
+        assertFalse(t.contains("aaa"));
+        assertTrue(t.contains("aaabc"));
+        assertTrue(t.contains("aaabb"));
+        assertTrue(t.contains("d"));
 
         t.remove("aaabb");
-        assertEquals(false, t.contains("aaabb"));
-        assertEquals(true, t.contains("aaabc"));
-        assertEquals(true, t.contains("d"));
-        assertEquals(false, t.contains("a"));
+        assertFalse(t.contains("aaabb"));
+        assertTrue(t.contains("aaabc"));
+        assertTrue(t.contains("d"));
+        assertFalse(t.contains("a"));
     }
 
     @Test
@@ -196,14 +202,14 @@ public class TrieTest {
         t.remove("aaa");
         t.remove("aaa");
 
-        assertEquals(false, t.contains("aaa"));
+        assertFalse(t.contains("aaa"));
     }
 
     @Test
     public void containsEmptyTrie() throws Exception {
         Trie t = new Trie();
 
-        assertEquals(false, t.contains("a"));
+        assertFalse(t.contains("a"));
     }
 
     @Test
@@ -211,7 +217,7 @@ public class TrieTest {
         Trie t = new Trie();
         t.add("a");
 
-        assertEquals(true, t.contains("a"));
+        assertTrue(t.contains("a"));
     }
 
     @Test
@@ -221,9 +227,9 @@ public class TrieTest {
         t.add("b");
         t.add("c");
 
-        assertEquals(true, t.contains("a"));
-        assertEquals(true, t.contains("b"));
-        assertEquals(true, t.contains("c"));
+        assertTrue(t.contains("a"));
+        assertTrue(t.contains("b"));
+        assertTrue(t.contains("c"));
     }
 
     @Test
@@ -237,12 +243,12 @@ public class TrieTest {
         t.add("aaaaabc");
         t.add("aaaaabb");
 
-        assertEquals(true, t.contains("a"));
-        assertEquals(true, t.contains("b"));
-        assertEquals(true, t.contains("c"));
-        assertEquals(true, t.contains("aaab"));
-        assertEquals(true, t.contains("aaaaabc"));
-        assertEquals(true, t.contains("aaaaabb"));
+        assertTrue(t.contains("a"));
+        assertTrue(t.contains("b"));
+        assertTrue(t.contains("c"));
+        assertTrue(t.contains("aaab"));
+        assertTrue(t.contains("aaaaabc"));
+        assertTrue(t.contains("aaaaabb"));
     }
 
     @Test
@@ -257,21 +263,21 @@ public class TrieTest {
         t.add("aaaaabb");
 
         t.remove("a");
-        assertEquals(false, t.contains("a"));
-        assertEquals(true, t.contains("b"));
-        assertEquals(true, t.contains("c"));
-        assertEquals(true, t.contains("aaab"));
-        assertEquals(true, t.contains("aaaaabc"));
-        assertEquals(true, t.contains("aaaaabb"));
+        assertFalse(t.contains("a"));
+        assertTrue(t.contains("b"));
+        assertTrue(t.contains("c"));
+        assertTrue(t.contains("aaab"));
+        assertTrue(t.contains("aaaaabc"));
+        assertTrue(t.contains("aaaaabb"));
 
         t.remove("aaab");
         t.add("a");
-        assertEquals(true, t.contains("a"));
-        assertEquals(true, t.contains("b"));
-        assertEquals(true, t.contains("c"));
-        assertEquals(false, t.contains("aaab"));
-        assertEquals(true, t.contains("aaaaabc"));
-        assertEquals(true, t.contains("aaaaabb"));
+        assertTrue(t.contains("a"));
+        assertTrue(t.contains("b"));
+        assertTrue(t.contains("c"));
+        assertFalse(t.contains("aaab"));
+        assertTrue(t.contains("aaaaabc"));
+        assertTrue( t.contains("aaaaabb"));
     }
 
     @Test
@@ -292,12 +298,12 @@ public class TrieTest {
         t.remove("aaaaabc");
         t.remove("aaaaabb");
 
-        assertEquals(false, t.contains("a"));
-        assertEquals(false, t.contains("b"));
-        assertEquals(false, t.contains("c"));
-        assertEquals(false, t.contains("aaab"));
-        assertEquals(false, t.contains("aaaaabc"));
-        assertEquals(false, t.contains("aaaaabb"));
+        assertFalse(t.contains("a"));
+        assertFalse(t.contains("b"));
+        assertFalse(t.contains("c"));
+        assertFalse(t.contains("aaab"));
+        assertFalse(t.contains("aaaaabc"));
+        assertFalse(t.contains("aaaaabb"));
     }
 
 
@@ -389,14 +395,14 @@ public class TrieTest {
     public void removeNonExistentKey() throws Exception {
         Trie t = new Trie();
         t.add("a");
-        assertEquals(false, t.remove("b"));
+        assertFalse(t.remove("b"));
     }
 
     @Test
     public void removeExistentKey() throws Exception {
         Trie t = new Trie();
         t.add("a");
-        assertEquals(true, t.remove("a"));
+        assertTrue(t.remove("a"));
         assertEquals(0, t.size());
     }
 
@@ -408,26 +414,26 @@ public class TrieTest {
         t.add("aaaabc");
         t.add("aaa");
         t.add("aaabccfd");
-        assertEquals(true, t.remove("aaaa"));
+        assertTrue(t.remove("aaaa"));
 
         assertEquals(4, t.size());
-        assertEquals(false, t.remove("aaaa"));
+        assertFalse(t.remove("aaaa"));
 
-        assertEquals(true, t.remove("aaa"));
+        assertTrue(t.remove("aaa"));
         assertEquals(3, t.size());
 
-        assertEquals(false, t.remove("a"));
+        assertFalse(t.remove("a"));
         assertEquals(3, t.size());
 
-        assertEquals(true, t.remove("aaab"));
-        assertEquals(true, t.remove("aaaabc"));
-        assertEquals(true, t.remove("aaabccfd"));
+        assertTrue(t.remove("aaab"));
+        assertTrue(t.remove("aaaabc"));
+        assertTrue(t.remove("aaabccfd"));
 
         assertEquals(0, t.size());
     }
 
     @Test
-    public void serialize() throws IOException {
+    public void serialize() throws IOException, ClassNotFoundException {
         Trie t = new Trie();
         t.add("a");
         t.add("ab");
@@ -435,20 +441,30 @@ public class TrieTest {
         t.add("aaacdv");
         t.add("dd");
         t.add("d");
-        OutputStream out = new FileOutputStream("out.txt");
+        OutputStream out = new FileOutputStream("serialize.txt");
         t.serialize(out);
+        InputStream in = new FileInputStream("serialize.txt");
+        t.deserialize(in);
+        assertEquals(6, t.size());
+        assertTrue(t.contains("a"));
+        assertTrue(t.contains("ab"));
+        assertTrue(t.contains("aaacdv"));
+        assertTrue(t.contains("aaaabcd"));
+        assertTrue(t.contains("dd"));
+        assertTrue(t.contains("d"));
     }
 
     @Test
     public void deserialize() throws IOException, ClassNotFoundException {
         Trie t = new Trie();
-        InputStream in = new FileInputStream("out.txt");
+        InputStream in = new FileInputStream("deserialize.txt");
         t.deserialize(in);
-        assertEquals(true, t.contains("a"));
-        assertEquals(true, t.contains("ab"));
-        assertEquals(true, t.contains("aaacdv"));
-        assertEquals(true, t.contains("aaaabcd"));
-        assertEquals(true, t.contains("dd"));
-        assertEquals(true, t.contains("d"));
+        assertEquals(6, t.size());
+        assertTrue(t.contains("a"));
+        assertTrue(t.contains("ab"));
+        assertTrue(t.contains("aaacdv"));
+        assertTrue(t.contains("aaaabcd"));
+        assertTrue(t.contains("dd"));
+        assertTrue(t.contains("d"));
     }
 }

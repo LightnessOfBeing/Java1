@@ -8,8 +8,8 @@ import java.util.*;
  * Class that implements trie.
  */
 
-public class Trie implements Serializable{
-    private static class TrieNode implements Serializable{
+public class Trie implements Serializable {
+    private static class TrieNode implements Serializable {
 
         /**
          * Character that lies in current node.
@@ -35,18 +35,22 @@ public class Trie implements Serializable{
 
         private int howManyWords;
 
-        TrieNode(Character c){
+        /**
+         * Constructor that receives a character.
+         */
+
+        public TrieNode(Character c) {
             character = c;
             mapChild = null;
             isWord = false;
-            howManyWords = 1;
+            howManyWords = 0;
         }
 
-        public boolean isWord(){
+        public boolean isWord() {
             return isWord;
         }
 
-        public void setWord(){
+        public void setWord() {
             isWord = true;
         }
 
@@ -54,27 +58,27 @@ public class Trie implements Serializable{
             isWord = false;
         }
 
-        public void incrementHowManyWords(){
+        public void incrementHowManyWords() {
             howManyWords++;
         }
 
-        public void decrementHowManyWords(){
+        public void decrementHowManyWords() {
             howManyWords--;
         }
 
-        public int getHowManyWords(){
+        public int getHowManyWords() {
             return howManyWords;
         }
 
-        public TrieNode get(char c){
-            if(mapChild == null){
+        public TrieNode get(char c) {
+            if (mapChild == null) {
                 return null;
             }
             return mapChild.get(c);
         }
 
-        public TrieNode goDown(char c){
-            if (mapChild == null || mapChild.get(c) == null){
+        public TrieNode goDown(char c) {
+            if (mapChild == null || mapChild.get(c) == null) {
                 return null;
             }
             return mapChild.get(c);
@@ -86,18 +90,18 @@ public class Trie implements Serializable{
          * @param c character that we either want to go through or create.
          * @return node that lies deeper than the current node and its symbol is equal to c.
          */
-        public TrieNode getOrCreateChild(char c){
-            if (mapChild == null){
+        public TrieNode getOrCreateChild(char c) {
+            if (mapChild == null) {
                 mapChild = new HashMap<>();
             }
+            this.incrementHowManyWords();
             TrieNode cur = mapChild.get(c);
-            if (cur == null){
+
+            if (cur == null) {
                 cur = new TrieNode(c);
                 mapChild.put(c, cur);
             }
-            else{
-                cur.incrementHowManyWords();
-            }
+
             return cur;
         }
 
@@ -113,21 +117,20 @@ public class Trie implements Serializable{
     private TrieNode root;
 
     /**
-     * Size of a trie.
-     */
-
-    private int size = 0;
-
-    /**
      * Constructor, symbol of root is '0'.
      */
 
-    public Trie(){
+    public Trie() {
         root = new TrieNode((char) 0);
     }
 
-    public int size(){
-        return size;
+    /**
+     * Method which returns sizel.
+     * @return size of a trie.
+     */
+
+    public int size() {
+        return root.howManyWords;
     }
 
     /**
@@ -135,19 +138,21 @@ public class Trie implements Serializable{
      * @param element - string that we want to add to a trie.
      * @return true, if trie contains a given string, otherwise false.
      */
-    public boolean add(String element){
-        if(contains(element)){
+    public boolean add(String element) {
+        if (element == null) {
+            throw new IllegalArgumentException("Please pass the correct string");
+        }
+        if (contains(element)) {
             return false;
         }
         TrieNode node = root;
-        for (char c : element.toCharArray()){
+        for (char c : element.toCharArray()) {
             node = node.getOrCreateChild(c);
         }
         boolean contains = true;
-        if (!node.isWord()){
+        if (!node.isWord()) {
             contains = false;
             node.setWord();
-            size++;
         }
         return !contains;
     }
@@ -158,11 +163,12 @@ public class Trie implements Serializable{
      * @param element that we want to check.
      * @return true if trie contains given string, otherwise false.
      */
-    public boolean contains(String element){
+
+    public boolean contains(String element) {
         TrieNode node = root;
-        for (char c : element.toCharArray()){
+        for (char c : element.toCharArray()) {
             node = node.get(c);
-            if(node == null){
+            if (node == null) {
                 return false;
             }
         }
@@ -177,23 +183,18 @@ public class Trie implements Serializable{
      * @param prefix that we want to check.
      * @return number of strings that starts with given prefix.
      */
-    public int howManyStartsWithPrefix(String prefix){
+
+    public int howManyStartsWithPrefix(String prefix) {
         TrieNode node = root;
-        for (char c : prefix.toCharArray()){
+        for (char c : prefix.toCharArray()) {
             node = node.goDown(c);
-            if(node == null){
+            if (node == null) {
                 return 0;
             }
         }
-        int cnt = 0;
-        if (node.isWord()){
+        int cnt = node.getHowManyWords();
+        if (node.isWord()) {
             cnt++;
-        }
-        if(node.getMap() != null) {
-            HashMap<Character, TrieNode> m = (HashMap<Character, TrieNode>) node.getMap();
-            for (Character a : m.keySet()) {
-                cnt += m.get(a).getHowManyWords();
-            }
         }
         return cnt;
     }
@@ -204,27 +205,28 @@ public class Trie implements Serializable{
      * if in one moment through our node goes only one word, we have to delete this node,
      * since this word is the target word, since we've check if our trie contains this word
      * in the beginning.
-     * @param element we want to remove
+     * @param e we want to remove
      * @return true if string was in trie, otherwise false.
      */
-    public boolean remove(String element){
-        if (!contains(element)){
+    public boolean remove(String e) {
+        Character last = e.charAt(e.length() - 1);
+        String element = e.substring(0, e.length() - 1);
+        if (!contains(e)) {
             return false;
         }
-        size--;
         TrieNode node = root;
-        for (char c : element.toCharArray()){
-            TrieNode go = node.getMap().get(c);
-            if (go.getHowManyWords() == 1){
-                node.decrementHowManyWords();
-                go.unsetWord();
-                node.getMap().remove(c);
-                return true;
-            }
+        for (char c : element.toCharArray()) {
+            node.decrementHowManyWords();
             node = node.goDown(c);
         }
-        node.unsetWord();
         node.decrementHowManyWords();
+        TrieNode lastNode = node.goDown(last);
+        if (lastNode.mapChild == null || lastNode.mapChild.size() == 0) {
+            node.getMap().remove(last);
+        }
+        else {
+            lastNode.unsetWord();
+        }
         return true;
     }
 
@@ -232,7 +234,6 @@ public class Trie implements Serializable{
      * Serializes our trie.
      * We start from the root and serialize node by node via dfs.
      * @param out stream where we want to write.
-     * @throws IOException
      */
     public void serialize(OutputStream out) throws IOException{
         try {
@@ -243,14 +244,14 @@ public class Trie implements Serializable{
                 TrieNode cur = st.peek();
                 st.pop();
                 outStream.writeObject(cur);
-                if(cur != null && cur.getMap() != null) {
+                if (cur != null && cur.getMap() != null) {
                     for (Character a : cur.getMap().keySet()) {
                         st.push(cur.getMap().get(a));
                     }
                 }
             }
 
-        } catch(IOException i){
+        } catch(IOException i) {
             i.printStackTrace();
         }
     }
@@ -258,31 +259,23 @@ public class Trie implements Serializable{
     /**
      * Deserializes our trie via dfs.
      * @param in stream from where we want to read.
-     * @throws IOException
-     * @throws ClassNotFoundException
      */
     public void deserialize(InputStream in) throws IOException, ClassNotFoundException {
-        try {
-            ObjectInputStream inStream = new ObjectInputStream(in);
-            root = (TrieNode) inStream.readObject();
-            Stack<TrieNode> st = new Stack<>();
-            st.push(root);
-            while (!st.empty()) {
-                TrieNode cur = st.peek();
-                st.pop();
-                if (cur != null && cur.getMap() != null) {
-                    List<Character> l = new ArrayList<Character>(cur.getMap().keySet());
-                    Collections.reverse(l);
-                    for (Character a : l) {
-                        TrieNode node = (TrieNode) inStream.readObject();
-                        st.push(node);
-                    }
+        ObjectInputStream inStream = new ObjectInputStream(in);
+        root = (TrieNode) inStream.readObject();
+        Stack<TrieNode> st = new Stack<>();
+        st.push(root);
+        while (!st.empty()) {
+            TrieNode cur = st.peek();
+            st.pop();
+            if (cur != null && cur.getMap() != null) {
+                List<Character> l = new ArrayList<Character>(cur.getMap().keySet());
+                Collections.reverse(l);
+                for (Character a : l) {
+                    TrieNode node = (TrieNode) inStream.readObject();
+                    st.push(node);
                 }
             }
-        } catch(IOException i){
-            i.printStackTrace();
         }
-
     }
-
 }
