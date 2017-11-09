@@ -1,5 +1,7 @@
 package ru.spbau.mit.vishnyakov;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Interface that implements behaviour of function with one argument.
  * @param <T> type of an argument
@@ -14,7 +16,7 @@ public interface Function1<T, R> {
      * @return result of application.
      */
 
-    R apply(T t);
+    @NotNull R apply(T t);
 
     /**
      * Implements a composition of two function. Namely, g(f(x)).
@@ -23,7 +25,8 @@ public interface Function1<T, R> {
      * @return result of a composition.
      */
 
-    default <V> Function1<T,V> compose(Function1<? super R,? extends V> before) {
+    @NotNull
+    default <V> Function1<T,V> compose(@NotNull Function1<? super R,? extends V> before) {
         return (f) -> before.apply(this.apply(f));
     }
 }

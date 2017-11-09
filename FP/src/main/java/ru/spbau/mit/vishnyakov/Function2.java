@@ -1,5 +1,7 @@
 package ru.spbau.mit.vishnyakov;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Interface that implements behaviour of function with two arguments.
  * @param <T> type of the first argument
@@ -16,7 +18,7 @@ public interface Function2<T, U, R> {
      * @return result of application.
      */
 
-    R apply(T t, U u);
+    @NotNull R apply(T t, U u);
 
     /**
      * Implements a composition of two function. Namely, g(f(x)).
@@ -25,7 +27,8 @@ public interface Function2<T, U, R> {
      * @return result of a composition.
      */
 
-    default <V> Function2<T, U, V> compose(Function1<? super R, ? extends V> before) {
+    @NotNull
+    default <V> Function2<T, U, V> compose(@NotNull Function1<? super R, ? extends V> before) {
         return (f, s) -> before.apply(this.apply(f, s));
     }
 
@@ -35,6 +38,7 @@ public interface Function2<T, U, R> {
      * @return f(_, y).
      */
 
+    @NotNull
     default Function1<U, R> bind1(T f) {
         return (s) -> this.apply(f, s);
     }
@@ -45,6 +49,7 @@ public interface Function2<T, U, R> {
      * @return f(x, _).
      */
 
+    @NotNull
     default Function1<T, R> bind2(U s) {
         return (f) -> this.apply(f, s);
     }

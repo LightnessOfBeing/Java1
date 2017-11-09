@@ -1,5 +1,7 @@
 package ru.spbau.mit.vishnyakov;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.ListIterator;
 
@@ -18,7 +20,8 @@ public class Collection {
      * @return list of "mapped" elements.
      */
 
-    public static <R, T> ArrayList<T> map(Function1<? super R,? extends T> function, Iterable<? extends R> collection) {
+    @NotNull
+    public static <R, T> ArrayList<T> map(@NotNull Function1<? super R,? extends T> function, @NotNull Iterable<? extends R> collection) {
         ArrayList<T> list = new ArrayList<>();
         for (R element : collection) {
             list.add(function.apply(element));
@@ -34,7 +37,8 @@ public class Collection {
      * @return list of elements, which satisfy the predicate.
      */
 
-    public static <R> ArrayList<R> filter(Predicate<? super R> p, Iterable<? extends R> collection) {
+    @NotNull
+    public static <R> ArrayList<R> filter(@NotNull Predicate<? super R> p, @NotNull Iterable<? extends R> collection) {
         ArrayList<R> list = new ArrayList<>();
         for (R element : collection) {
             if (p.apply(element)) {
@@ -52,7 +56,8 @@ public class Collection {
      * @return list of elements which were added.
      */
 
-    public static <R> ArrayList<R> takeWhile(Predicate<? super R> p, Iterable<? extends R> collection) {
+    @NotNull
+    public static <R> ArrayList<R> takeWhile(@NotNull Predicate<? super R> p, @NotNull Iterable<? extends R> collection) {
         ArrayList<R> list = new ArrayList<>();
         for (R element : collection) {
             if (!p.apply(element)) {
@@ -71,7 +76,8 @@ public class Collection {
      * @return list of elements which were added.
      */
 
-    public static <R> ArrayList<R> takeUnless(Predicate<? super R> p, Iterable<? extends R> collection) {
+    @NotNull
+    public static <R> ArrayList<R> takeUnless(@NotNull Predicate<? super R> p, @NotNull Iterable<? extends R> collection) {
         return takeWhile(p.not(), collection);
     }
 
@@ -85,7 +91,7 @@ public class Collection {
      * @return result of left-side fold.
      */
 
-    public static <R, T> T foldl(Function2<? super T, ? super R, ? extends T> function, T accumulator, Iterable<? extends R> collection) {
+    public static <R, T> T foldl(@NotNull Function2<? super T, ? super R, ? extends T> function, T accumulator, @NotNull Iterable<? extends R> collection) {
         for (R element : collection) {
             accumulator = function.apply(accumulator, element);
         }
@@ -101,7 +107,7 @@ public class Collection {
      * @return result of left-side fold.
      */
 
-    public static final <R, T> T foldr(Function2<? super R, ? super T, ? extends T> function, T accumulator, Iterable<? extends R> collection) {
+    public static final <R, T> T foldr(@NotNull Function2<? super R, ? super T, ? extends T> function, T accumulator, @NotNull Iterable<? extends R> collection) {
         ArrayList<R> list = new ArrayList<>();
         for (R element : collection) {
             list.add(element);

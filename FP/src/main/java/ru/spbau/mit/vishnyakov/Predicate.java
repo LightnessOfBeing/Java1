@@ -1,5 +1,7 @@
 package ru.spbau.mit.vishnyakov;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface Predicate<T> extends Function1<T, Boolean> {
 
     /**
@@ -31,6 +33,7 @@ public interface Predicate<T> extends Function1<T, Boolean> {
      * @return inversed value of a predicate.
      */
 
+    @NotNull
     default Predicate<T> not() {
         return (x) -> !this.apply(x);
     }
@@ -41,7 +44,8 @@ public interface Predicate<T> extends Function1<T, Boolean> {
      * @return logic and of a two predicates.
      */
 
-    default Predicate<T> and(Predicate<T> second) {
+    @NotNull
+    default Predicate<T> and(@NotNull Predicate<T> second) {
         return (x) -> this.apply(x) && second.apply(x);
     }
 
@@ -51,7 +55,8 @@ public interface Predicate<T> extends Function1<T, Boolean> {
      * @return logic or of a two predicates.
      */
 
-    default Predicate<T> or(Predicate<T> second) {
+    @NotNull
+    default Predicate<T> or(@NotNull Predicate<T> second) {
         return (x) -> this.apply(x) || second.apply(x);
     }
 }
