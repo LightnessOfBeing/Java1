@@ -77,7 +77,7 @@ public class MyZipFile {
      * if element of that entry is a file and its name matches the regular expression.
      */
 
-    public void unzip(){
+    public void unzip() throws IOException {
         ArrayList<String> listOfArchives = getListOfFiles();
 
         for (String s : listOfArchives) {
@@ -88,8 +88,9 @@ public class MyZipFile {
                 return;
             }
 
+
+            ZipFile zip = new ZipFile(filename);
             try {
-                ZipFile zip = new ZipFile(filename);
                 Enumeration entries = zip.entries();
 
                 while (entries.hasMoreElements()) {
