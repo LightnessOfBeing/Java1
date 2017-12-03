@@ -28,14 +28,14 @@ public class MaybeTest {
         File file = new File(directory + "/file.in");
         Scanner s = new Scanner(file);
 
-        assertEquals(true, MaybeTest.readNumber(s).get().equals(1));
-        assertEquals(true, MaybeTest.readNumber(s).get().equals(2));
-        assertEquals(true, MaybeTest.readNumber(s).get().equals(3));
-        assertEquals(true, MaybeTest.readNumber(s).get().equals(4));
-        assertEquals(true, MaybeTest.readNumber(s).get().equals(5));
-        assertEquals(true, MaybeTest.readNumber(s).get().equals(100));
-        assertEquals(false, MaybeTest.readNumber(s).isPresent());
-        assertEquals(false, MaybeTest.readNumber(s).isPresent());
+        assertTrue(MaybeTest.readNumber(s).get().equals(1));
+        assertTrue(MaybeTest.readNumber(s).get().equals(2));
+        assertTrue(MaybeTest.readNumber(s).get().equals(3));
+        assertTrue(MaybeTest.readNumber(s).get().equals(4));
+        assertTrue(MaybeTest.readNumber(s).get().equals(5));
+        assertTrue(MaybeTest.readNumber(s).get().equals(100));
+        assertFalse(MaybeTest.readNumber(s).isPresent());
+        assertFalse(MaybeTest.readNumber(s).isPresent());
 
         s.close();
     }
@@ -67,14 +67,14 @@ public class MaybeTest {
 
         Scanner sOut = new Scanner(output);
 
-        assertEquals(true, MaybeTest.readNumber(sOut).get().equals(1));
-        assertEquals(true, MaybeTest.readNumber(sOut).get().equals(4));
-        assertEquals(true, MaybeTest.readNumber(sOut).get().equals(9));
-        assertEquals(true, MaybeTest.readNumber(sOut).get().equals(16));
-        assertEquals(true, MaybeTest.readNumber(sOut).get().equals(25));
-        assertEquals(true, MaybeTest.readNumber(sOut).get().equals(10000));
-        assertEquals(false, MaybeTest.readNumber(sOut).isPresent());
-        assertEquals(false, MaybeTest.readNumber(sOut).isPresent());
+        assertTrue(MaybeTest.readNumber(sOut).get().equals(1));
+        assertTrue(MaybeTest.readNumber(sOut).get().equals(4));
+        assertTrue(MaybeTest.readNumber(sOut).get().equals(9));
+        assertTrue(MaybeTest.readNumber(sOut).get().equals(16));
+        assertTrue(MaybeTest.readNumber(sOut).get().equals(25));
+        assertTrue(MaybeTest.readNumber(sOut).get().equals(10000));
+        assertFalse(MaybeTest.readNumber(sOut).isPresent());
+        assertFalse(MaybeTest.readNumber(sOut).isPresent());
 
         sIn.close();
         sOut.close();
@@ -84,13 +84,13 @@ public class MaybeTest {
     @Test
     public void justValue() throws Exception {
         Maybe<Integer> m = Maybe.just(10);
-        assertEquals(true, m.isPresent());
+        assertTrue(m.isPresent());
     }
 
     @Test
     public void nothingNoValue() throws Exception {
         Maybe<Integer> m = Maybe.just(10);
-        assertEquals(true, m.isPresent());
+        assertTrue(m.isPresent());
 
     }
 
@@ -105,7 +105,7 @@ public class MaybeTest {
     public void getHasValue() throws Exception {
         Maybe<Integer> m = Maybe.just(10);
         try {
-            assertEquals(true, m.get().equals(10));
+            assertTrue(m.get().equals(10));
         } catch(MyException e) {
             fail(e.getMessage());
         }
@@ -115,21 +115,21 @@ public class MaybeTest {
     public void isPresentNoValue() throws Exception {
         Maybe<Integer> m = Maybe.nothing();
 
-        assertEquals(false, m.isPresent());
+        assertFalse(m.isPresent());
     }
 
     @Test
     public void isPresentHasValue() throws Exception {
         Maybe<Integer> m = Maybe.just(10);
 
-        assertEquals(true, m.isPresent());
+        assertTrue(m.isPresent());
     }
 
     @Test
     public void mapNonEmpty() throws Exception {
         Maybe<Integer> m = Maybe.just(2);
         try {
-            assertEquals(true, m.map(x -> x * x).get().equals(4));
+            assertTrue(m.map(x -> x * x).get().equals(4));
         } catch(MyException e) {
             fail(e.getMessage());
         }
@@ -139,7 +139,7 @@ public class MaybeTest {
     public void testMapEmpty() throws Exception {
         Maybe<Integer> maybe = Maybe.nothing();
 
-        assertEquals(false, maybe.map(x -> x * x).isPresent());
+        assertFalse(maybe.map(x -> x * x).isPresent());
     }
 
 }
