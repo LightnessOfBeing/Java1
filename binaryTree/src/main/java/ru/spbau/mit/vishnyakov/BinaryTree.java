@@ -5,14 +5,14 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Class that represents BinaryTree.
- * @param <T> type.
+ * @param <T> type stored elements.
  */
 
 public class BinaryTree<T extends Comparable<T>> {
 
     /**
      * Class that represents node of a BinaryTree.
-     * @param <T> type.
+     * @param <T> type of elements.
      */
 
     private static class Node<T extends Comparable<T>> implements Comparable<Node<T>> {
@@ -21,18 +21,26 @@ public class BinaryTree<T extends Comparable<T>> {
          * Data of a node.
          */
 
+        @Nullable
         private T data;
 
         /**
-         * Left and right children.
+         * Left child.
          */
 
         @Nullable
-        private Node<T> left, right;
+        private Node<T> left;
+
+        /**
+         * Right child.
+         */
+
+        @Nullable
+        private Node<T> right;
 
         /**
          * Constructor.
-         * @param data - data supposed to be stored in a node.
+         * @param data data supposed to be stored in a node.
          */
 
         public Node(T data) {
@@ -98,14 +106,11 @@ public class BinaryTree<T extends Comparable<T>> {
     /**
      * Method that adds elements in BinaryTree.
      * Goes from root till it reaches null elements, creates new node and changes child of parent.
-     * @param data - data that supposed to be stored in a node.
+     * @param data data that supposed to be stored in a node.
      * @return true if element have been added, false if element have been already added in a BinaryTree.
      */
 
     public boolean add(@NotNull T data) {
-        Node<T> node = new Node<>(data);
-        Node<T> curNode = root;
-        Node<T> parent = root;
 
         assert root != null;
         if (root.getData() == null) {
@@ -114,9 +119,13 @@ public class BinaryTree<T extends Comparable<T>> {
             return true;
         }
 
+        Node<T> curNode = root;
+        Node<T> parent = root;
+        Node<T> node = new Node<>(data);
+
         while (curNode != null) {
             parent = curNode;
-            if (node.compareTo(node) > 0) {
+            if (curNode.compareTo(node) > 0) {
                 curNode = curNode.getLeft();
             }
             else if (curNode.compareTo(node) < 0) {
