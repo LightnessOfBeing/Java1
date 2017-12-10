@@ -1,80 +1,42 @@
 package ru.spbau.mit.vishnyakov;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-import static java.lang.Integer.parseInt;
 import static org.junit.Assert.*;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
+@SuppressWarnings("ConstantConditions")
 public class MaybeTest {
-
-    @Nullable
-    private static Maybe<Integer> readNumber(@NotNull Scanner s) {
-        String st = s.nextLine();
-        Maybe<Integer> m;
-        try {
-            m = Maybe.just(parseInt(st));
-        } catch (NumberFormatException ex) {
-            m =  Maybe.nothing();
-        }
-        return m;
-    }
 
     @Test
     public void readNumberTest() throws Exception {
         String directory = System.getProperty("user.dir") + "/src/main/resources";
         File file = new File(directory + "/file.in");
         try (Scanner s = new Scanner(file)) {
-            assertEquals(1, MaybeTest.readNumber(s).get().intValue());
-            assertEquals(2, MaybeTest.readNumber(s).get().intValue());
-            assertEquals(3, MaybeTest.readNumber(s).get().intValue());
-            assertEquals(4, MaybeTest.readNumber(s).get().intValue());
-            assertEquals(5, MaybeTest.readNumber(s).get().intValue());
-            assertEquals(100, MaybeTest.readNumber(s).get().intValue());
-            assertFalse(MaybeTest.readNumber(s).isPresent());
-            assertFalse(MaybeTest.readNumber(s).isPresent());
+            assertEquals(1, Main.readNumber(s).get().intValue());
+            assertEquals(2, Main.readNumber(s).get().intValue());
+            assertEquals(3, Main.readNumber(s).get().intValue());
+            assertEquals(4, Main.readNumber(s).get().intValue());
+            assertEquals(5, Main.readNumber(s).get().intValue());
+            assertEquals(100, Main.readNumber(s).get().intValue());
+            assertFalse(Main.readNumber(s).isPresent());
+            assertFalse(Main.readNumber(s).isPresent());
         }
     }
 
     @Test
     public void squareNumbersTest() throws Exception {
         String directory = System.getProperty("user.dir") + "/src/main/resources";
-        File input = new File(directory + "/file.in");
-        File output = new File(directory + "/file.out");
-        Maybe<Integer> m;
-        output.createNewFile();
+        String sourcePath = directory + "/file.in";
+        String destinationPath = directory + "/file.out";
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(directory + "/file.out")); Scanner sIn = new Scanner(input)) {
-            for(int i = 0; i < 8; i++) {
-                m = MaybeTest.readNumber(sIn);
-                if (m.isPresent()) {
-                    writer.write(m.map(x -> x * x).get().toString() + "\n");
-                }
-                else {
-                    writer.write("null\n");
-                }
-            }
-        }
+        ArrayList<String> actual = Main.readAndSquare(sourcePath, destinationPath);
 
-        try (Scanner sOut = new Scanner(output)) {
-            assertEquals(1, MaybeTest.readNumber(sOut).get().intValue());
-            assertEquals(4, MaybeTest.readNumber(sOut).get().intValue());
-            assertEquals(9, MaybeTest.readNumber(sOut).get().intValue());
-            assertEquals(16, MaybeTest.readNumber(sOut).get().intValue());
-            assertEquals(25, MaybeTest.readNumber(sOut).get().intValue());
-            assertEquals(10000, MaybeTest.readNumber(sOut).get().intValue());
-            assertFalse(MaybeTest.readNumber(sOut).isPresent());
-            assertFalse(MaybeTest.readNumber(sOut).isPresent());
-        }
-
-        output.delete();
+        String[] answer = {"1", "4", "9", "16", "25", "10000", "null", "null"};
+        assertArrayEquals(answer, actual.toArray());
     }
 
     @Test
