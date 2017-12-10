@@ -1,24 +1,9 @@
+package ru.spbau.mit.vishnyakov;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
-
-/**
- * Exception class for Maybe.
- */
-
-class MyException extends Exception{
-
-    /**
-     * Constructor.
-     * @param s - represents error message.
-     */
-
-    public  MyException(String s){
-        super(s);
-    }
-
-}
 
 /**
  * Maybe implementation.
@@ -35,11 +20,18 @@ public class Maybe<T> {
     private final T val;
 
     /**
+     * Static field that represents Nothing.
+     */
+
+    @Nullable
+    private static final Maybe NOTHING = new Maybe<>(null);
+
+    /**
      * Constructor.
      * @param t - represents value.
      */
 
-    private Maybe(@Nullable T t){
+    private Maybe(@Nullable T t) {
         val = t;
     }
 
@@ -51,7 +43,7 @@ public class Maybe<T> {
      */
 
     @NotNull
-    public static <T> Maybe<T> just(T t){
+    public static <T> Maybe<T> just(T t) {
         return new Maybe<>(t);
     }
 
@@ -61,34 +53,47 @@ public class Maybe<T> {
      * @return new instance
      */
 
-    public static <T> Maybe<T> nothing(){
-        return new Maybe<>(null);
+    @SuppressWarnings("unchecked")
+    @Nullable
+    public static <T> Maybe<T> nothing() {
+        return NOTHING;
     }
 
     /**
-     *
+     * Returns value if it is exists, otherwise false.
      * @return value that is storing in instance
-     * @throws MyException
+     * @throws MyException which occurs in case val equals null.
      */
 
     @Nullable
     public T get() throws MyException {
-        if (val == null){
+        if (val == null) {
             throw new MyException("There is no value!");
         }
         return val;
     }
 
-    public boolean isPresent(){
+    /**
+     * Checks if value is present.
+     * @return true if value is present, otherwise false.
+     */
+
+    public boolean isPresent() {
         return val != null;
     }
 
+    /**
+     * Applies function to a stored value.
+     * @param mapper is a function, which we want to apply.
+     * @param <U> type of result object.
+     * @return new Maybe instance, as result of application.
+     */
+
     @Nullable
-    public <U> Maybe<U> map(@NotNull Function<? super T,  ? extends U> mapper){
-        if (!isPresent()){
+    public <U> Maybe<U> map(@NotNull Function<? super T,  ? extends U> mapper) {
+        if (!isPresent()) {
             return new Maybe<>(null);
         }
-
         return new Maybe<>(mapper.apply(val));
     }
 }

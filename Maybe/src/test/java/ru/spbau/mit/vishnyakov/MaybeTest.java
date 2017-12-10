@@ -1,4 +1,7 @@
+package ru.spbau.mit.vishnyakov;
+
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
 import java.io.BufferedWriter;
@@ -9,15 +12,17 @@ import java.util.Scanner;
 import static java.lang.Integer.parseInt;
 import static org.junit.Assert.*;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class MaybeTest {
 
-    private static Maybe<Integer> readNumber(@NotNull Scanner s){
+    @Nullable
+    private static Maybe<Integer> readNumber(@NotNull Scanner s) {
         String st = s.nextLine();
         Maybe<Integer> m;
         try {
             m = Maybe.just(parseInt(st));
-        } catch (Exception ex) {
-            m = Maybe.nothing();
+        } catch (NumberFormatException ex) {
+            m =  Maybe.nothing();
         }
         return m;
     }
@@ -26,18 +31,16 @@ public class MaybeTest {
     public void readNumberTest() throws Exception {
         String directory = System.getProperty("user.dir") + "/src/main/resources";
         File file = new File(directory + "/file.in");
-        Scanner s = new Scanner(file);
-
-        assertTrue(MaybeTest.readNumber(s).get().equals(1));
-        assertTrue(MaybeTest.readNumber(s).get().equals(2));
-        assertTrue(MaybeTest.readNumber(s).get().equals(3));
-        assertTrue(MaybeTest.readNumber(s).get().equals(4));
-        assertTrue(MaybeTest.readNumber(s).get().equals(5));
-        assertTrue(MaybeTest.readNumber(s).get().equals(100));
-        assertFalse(MaybeTest.readNumber(s).isPresent());
-        assertFalse(MaybeTest.readNumber(s).isPresent());
-
-        s.close();
+        try (Scanner s = new Scanner(file)) {
+            assertEquals(1, MaybeTest.readNumber(s).get().intValue());
+            assertEquals(2, MaybeTest.readNumber(s).get().intValue());
+            assertEquals(3, MaybeTest.readNumber(s).get().intValue());
+            assertEquals(4, MaybeTest.readNumber(s).get().intValue());
+            assertEquals(5, MaybeTest.readNumber(s).get().intValue());
+            assertEquals(100, MaybeTest.readNumber(s).get().intValue());
+            assertFalse(MaybeTest.readNumber(s).isPresent());
+            assertFalse(MaybeTest.readNumber(s).isPresent());
+        }
     }
 
     @Test
@@ -48,36 +51,29 @@ public class MaybeTest {
         Maybe<Integer> m;
         output.createNewFile();
 
-        Scanner sIn = new Scanner(input);
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(directory + "/file.out"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(directory + "/file.out")); Scanner sIn = new Scanner(input)) {
             for(int i = 0; i < 8; i++) {
                 m = MaybeTest.readNumber(sIn);
                 if (m.isPresent()) {
                     writer.write(m.map(x -> x * x).get().toString() + "\n");
-                } else {
+                }
+                else {
                     writer.write("null\n");
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
-        sIn.close();
+        try (Scanner sOut = new Scanner(output)) {
+            assertEquals(1, MaybeTest.readNumber(sOut).get().intValue());
+            assertEquals(4, MaybeTest.readNumber(sOut).get().intValue());
+            assertEquals(9, MaybeTest.readNumber(sOut).get().intValue());
+            assertEquals(16, MaybeTest.readNumber(sOut).get().intValue());
+            assertEquals(25, MaybeTest.readNumber(sOut).get().intValue());
+            assertEquals(10000, MaybeTest.readNumber(sOut).get().intValue());
+            assertFalse(MaybeTest.readNumber(sOut).isPresent());
+            assertFalse(MaybeTest.readNumber(sOut).isPresent());
+        }
 
-        Scanner sOut = new Scanner(output);
-
-        assertTrue(MaybeTest.readNumber(sOut).get().equals(1));
-        assertTrue(MaybeTest.readNumber(sOut).get().equals(4));
-        assertTrue(MaybeTest.readNumber(sOut).get().equals(9));
-        assertTrue(MaybeTest.readNumber(sOut).get().equals(16));
-        assertTrue(MaybeTest.readNumber(sOut).get().equals(25));
-        assertTrue(MaybeTest.readNumber(sOut).get().equals(10000));
-        assertFalse(MaybeTest.readNumber(sOut).isPresent());
-        assertFalse(MaybeTest.readNumber(sOut).isPresent());
-
-        sIn.close();
-        sOut.close();
         output.delete();
     }
 
@@ -98,48 +94,35 @@ public class MaybeTest {
     public void getNoValue() throws Exception {
         Maybe<Integer> m = Maybe.nothing();
         m.get();
-
     }
 
     @Test
     public void getHasValue() throws Exception {
         Maybe<Integer> m = Maybe.just(10);
-        try {
-            assertTrue(m.get().equals(10));
-        } catch(MyException e) {
-            fail(e.getMessage());
-        }
+        assertEquals(10, m.get().intValue());
     }
 
     @Test
     public void isPresentNoValue() throws Exception {
         Maybe<Integer> m = Maybe.nothing();
-
         assertFalse(m.isPresent());
     }
 
     @Test
     public void isPresentHasValue() throws Exception {
         Maybe<Integer> m = Maybe.just(10);
-
         assertTrue(m.isPresent());
     }
 
     @Test
     public void mapNonEmpty() throws Exception {
         Maybe<Integer> m = Maybe.just(2);
-        try {
-            assertTrue(m.map(x -> x * x).get().equals(4));
-        } catch(MyException e) {
-            fail(e.getMessage());
-        }
+        assertEquals(4, m.map(x -> x * x).get().intValue());
     }
 
     @Test
     public void testMapEmpty() throws Exception {
         Maybe<Integer> maybe = Maybe.nothing();
-
         assertFalse(maybe.map(x -> x * x).isPresent());
     }
-
 }
