@@ -105,6 +105,11 @@ public class Stack<T> {
         return first.T;
     }
 
+    /**
+     * Checks whether stack is empty.
+     * @return true if stack is empty, otherwise false.
+     */
+
     public boolean empty() {
         return size() == 0;
     }

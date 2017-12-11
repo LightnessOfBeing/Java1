@@ -2,6 +2,8 @@ package ru.academic.university.mit.vishnyakov;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+
 /**
  * Class that represents our calculator.
  */
@@ -9,11 +11,30 @@ import org.jetbrains.annotations.NotNull;
 public class Calculator {
 
     /**
-     * Stack that helps us parse the expression.
+     * Stack where we store numbers from expression.
      */
 
     private Stack<Double> numbers;
+
+    /**
+     * Stack where we store operators from expression.
+     */
+
     private Stack<Character> operators;
+
+    /**
+     * Returns priority of the operation.
+     */
+
+    private static final HashMap<Character, Integer> PRIORITY = new HashMap<>();
+
+    static {
+        PRIORITY.put('(', 1);
+        PRIORITY.put('+', 2);
+        PRIORITY.put('-', 2);
+        PRIORITY.put('*', 3);
+        PRIORITY.put('/', 3);
+    }
 
     /**
      * Constructor that receives the stack for operations and stack for numbers.
@@ -51,12 +72,6 @@ public class Calculator {
                 i--;
                 output.append(' ');
             }
-            else if (operators.empty() || operators.top() == '(') {
-                operators.push(token);
-            }
-            else if (token == '(') {
-                operators.push(token);
-            }
             else if (token == ')') {
                 while (operators.top() != '(') {
                     output.append(operators.pop());
@@ -64,10 +79,13 @@ public class Calculator {
                 }
                 operators.pop();
             }
+            else if (token == '(') {
+                operators.push(token);
+            }
             else {
-                int currentPriority = priority(token);
+                int currentPriority = PRIORITY.getOrDefault(token, 4);
 
-                while (!operators.empty() && priority(operators.top()) >= currentPriority) {
+                while (!operators.empty() && PRIORITY.getOrDefault(operators.top(), 4) >= currentPriority) {
                     output.append(operators.pop());
                     output.append(' ');
                 }
@@ -86,83 +104,45 @@ public class Calculator {
     }
 
     /**
-     * Returns priority of the operand.
-     * @param operator which priority we want to receive
-     * @return priority of operator.
+     * Result of operation.
+     * @param operator stands for operation we want to perform.
+     * @param x first argument.
+     * @param y second argument.
+     * @return result of application.
      */
 
-    private int priority(char operator) {
+    private double application(char operator, double x, double y) {
         switch (operator) {
-            case '(':
-                return 0;
             case '+':
+                return x + y;
             case '-':
-                return 1;
+                return x - y;
             case '*':
-            case '/':
-                return 2;
+                return x * y;
             default:
-                return 3;
+                return x / y;
         }
     }
 
     /**
-     * Evalates the expression encoded in RPN.
-     * @param expression to calculate.
+     * Evaluates expression.
+     * @param input which we want to evaluate.
      * @return result of evaluation.
      */
 
-    double calculate(@NotNull String expression) {
-        double firstOperand, secondOperand;
-        String[] s = expression.split("\\s");
-        for (String token : expression.split("\\s")) {
-
-            switch (token) {
-                case "+":
-
-                    secondOperand = numbers.pop();
-                    firstOperand = numbers.pop();
-
-                    numbers.push(firstOperand + secondOperand);
-                    break;
-                case "-":
-
-                    secondOperand = numbers.pop();
-                    firstOperand = numbers.pop();
-
-                    numbers.push(firstOperand - secondOperand);
-                    break;
-                case "*":
-
-                    secondOperand = numbers.pop();
-                    firstOperand = numbers.pop();
-
-                    numbers.push(firstOperand * secondOperand);
-                    break;
-                case "/":
-
-                    secondOperand = numbers.pop();
-                    firstOperand = numbers.pop();
-
-                    if (secondOperand == 0.0) {
-                        throw new ArithmeticException("Cannot divide by zero!");
-                    }
-
-                    numbers.push(firstOperand / secondOperand);
-                    break;
-                case "^":
-
-                    secondOperand = numbers.pop();
-                    firstOperand = numbers.pop();
-
-                    numbers.push(Math.pow(firstOperand, secondOperand));
-                    break;
-                default:
-                    numbers.push(Double.parseDouble(token));
-                    break;
+    public double calculate(@NotNull String input) {
+        for (int i = 0; i < input.length(); i++) {
+            char token = input.charAt(i);
+            if ('0' <= token && token <= '9') {
+                numbers.push((double)(token - '0'));
             }
-
+            else {
+                double second = numbers.pop();
+                double first = numbers.pop();
+                numbers.push(application(token, first, second));
+            }
         }
+
         return numbers.top();
     }
 }

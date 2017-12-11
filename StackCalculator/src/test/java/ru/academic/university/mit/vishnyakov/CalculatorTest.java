@@ -9,7 +9,7 @@ public class CalculatorTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testReversePolishNotation() {
-        String input = "1+(2-(3))*(2/4)";
+        String input = "65 + (57 - (35)) * (200 / 10)";
 
         Stack<Double> mockedStackOperands = mock(Stack.class);
         Stack<Character> mockedStackOperators = mock(Stack.class);
@@ -43,39 +43,36 @@ public class CalculatorTest {
                 .thenReturn('+');
 
         Calculator calculator = new Calculator(mockedStackOperands, mockedStackOperators);
-        assertEquals("wrong expression", "123-24/*+", calculator.parseToRPN(input));
+        assertEquals("65 57 35 - 200 10 / * + ", calculator.parseToRPN(input));
 
-        verify(mockedStackOperators, times(7))
-                .push(anyChar());
+        verify(mockedStackOperators, times(7)).push(anyChar());
         verifyZeroInteractions(mockedStackOperands);
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testCalculate() {
-        String input = "123-24/*+";
+        String input = "65 57 35 - 200 10 / * + ";
 
         Stack<Character> mockedStackOperators = mock(Stack.class);
         Stack<Double> mockedStackOperands = mock(Stack.class);
 
         when(mockedStackOperands.pop())
-                .thenReturn(3.0)
-                .thenReturn(2.0)
-                .thenReturn(4.0)
-                .thenReturn(2.0)
-                .thenReturn(0.5)
-                .thenReturn(-1.0)
-                .thenReturn(-0.5)
-                .thenReturn(1.0);
+                .thenReturn(35.0)
+                .thenReturn(57.0)
+                .thenReturn(10.0)
+                .thenReturn(200.0)
+                .thenReturn(20.0)
+                .thenReturn(22.0)
+                .thenReturn(440.0)
+                .thenReturn(65.0);
 
-        when(mockedStackOperands.top())
-                .thenReturn(0.5);
+        when(mockedStackOperands.top()).thenReturn(505.0);
 
         Calculator calculator = new Calculator(mockedStackOperands, mockedStackOperators);
-        assertEquals("wrong value", 0.5, calculator.calculate(input), 1e-9);
+        assertEquals(505.0, calculator.calculate(input), 1e-9);
 
-        verify(mockedStackOperands, times(9))
-                .push(anyDouble());
+        verify(mockedStackOperands, times(24)).push(anyDouble());
         verifyZeroInteractions(mockedStackOperators);
     }
 }
