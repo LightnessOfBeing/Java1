@@ -62,13 +62,13 @@ public class Maybe<T> {
     /**
      * Returns value if it is exists, otherwise false.
      * @return value that is storing in instance
-     * @throws MyException which occurs in case val equals null.
+     * @throws MaybeException which occurs in case val equals null.
      */
 
     @Nullable
-    public T get() throws MyException {
+    public T get() throws MaybeException {
         if (val == null) {
-            throw new MyException("There is no value!");
+            throw new MaybeException("There is no value!");
         }
         return val;
     }

@@ -3,7 +3,6 @@ package ru.spbau.mit.vishnyakov;
 import org.junit.Test;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import static org.junit.Assert.*;
@@ -33,10 +32,10 @@ public class MaybeTest {
         String sourcePath = directory + "/file.in";
         String destinationPath = directory + "/file.out";
 
-        ArrayList<String> actual = Main.readAndSquare(sourcePath, destinationPath);
+        String[] actual = Main.readAndSquare(sourcePath, destinationPath);
 
         String[] answer = {"1", "4", "9", "16", "25", "10000", "null", "null"};
-        assertArrayEquals(answer, actual.toArray());
+        assertArrayEquals(answer, actual);
     }
 
     @Test
@@ -52,7 +51,7 @@ public class MaybeTest {
 
     }
 
-    @Test(expected = MyException.class)
+    @Test(expected = MaybeException.class)
     public void getNoValue() throws Exception {
         Maybe<Integer> m = Maybe.nothing();
         m.get();
