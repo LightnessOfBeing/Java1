@@ -6,6 +6,7 @@ import java.io.File;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class MyZipFileTest {
     @Test
     public void unzip_simple_regex() throws Exception {
@@ -16,24 +17,19 @@ public class MyZipFileTest {
         file.unzip();
 
         File file1 = new File(directory, "aaa");
-        boolean check1 = file1.exists();
-        assertTrue(check1);
+        assertTrue(file1.exists());
 
         File file2 = new File(directory, "acccdd");
-        boolean check2 = file2.exists();
-        assertTrue(check2);
+        assertTrue(file2.exists());
 
         File file3 = new File(directory, "bbb");
-        boolean check3 = file3.exists();
-        assertFalse(check3);
+        assertFalse(file3.exists());
 
         File file4 = new File(directory, "ccc");
-        boolean check4 = file4.exists();
-        assertFalse(check4);
+        assertFalse(file4.exists());
 
         File file5 = new File(directory, "baaan");
-        boolean check5 = file5.exists();
-        assertFalse(check5);
+        assertFalse(file5.exists());
 
         file1.delete();
         file2.delete();
@@ -48,24 +44,19 @@ public class MyZipFileTest {
         file.unzip();
 
         File file1 = new File(directory, "aaa");
-        boolean check1 = file1.exists();
-        assertFalse(check1);
+        assertFalse(file1.exists());
 
         File file2 = new File(directory, "acccdd");
-        boolean check2 = file2.exists();
-        assertFalse(check2);
+        assertFalse(file2.exists());
 
         File file3 = new File(directory, "bbb");
-        boolean check3 = file3.exists();
-        assertFalse(check3);
+        assertFalse(file3.exists());
 
         File file4 = new File(directory, "ccc");
-        boolean check4 = file4.exists();
-        assertFalse(check4);
+        assertFalse(file4.exists());
 
         File file5 = new File(directory, "baaan");
-        boolean check5 = file5.exists();
-        assertTrue(check5);
+        assertTrue(file5.exists());
 
         file5.delete();
     }

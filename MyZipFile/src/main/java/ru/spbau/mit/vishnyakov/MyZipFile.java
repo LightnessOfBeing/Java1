@@ -88,25 +88,20 @@ public class MyZipFile {
                 return;
             }
 
-
-            ZipFile zip = new ZipFile(filename);
-            try {
+            try (ZipFile zip = new ZipFile(filename)) {
                 Enumeration entries = zip.entries();
 
                 while (entries.hasMoreElements()) {
                     ZipEntry entry = (ZipEntry) entries.nextElement();
 
                     if (!entry.isDirectory() && entry.getName().matches(regExpression)) {
-                        write(zip.getInputStream(entry),
-                                new BufferedOutputStream(new FileOutputStream(
-                                        new File(file.getParent(), entry.getName()))));
+                        try (BufferedOutputStream bf = new BufferedOutputStream(
+                                new FileOutputStream(
+                                        new File(file.getParent(), entry.getName())))) {
+                            write(zip.getInputStream(entry), bf);
+                        }
                     }
                 }
-
-                zip.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }
