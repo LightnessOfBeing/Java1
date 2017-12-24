@@ -27,4 +27,9 @@ public class ReflectorTest {
         assertTrue(Modifier.isPublic(animalMods));
     }
 
+    @Test
+    public void defFields() {
+        Reflector.diffFields(Goat.class, Reflector.class);
+    }
+
 }

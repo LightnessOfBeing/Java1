@@ -1,24 +1,40 @@
 package ru.spbau.vishnyakov;
 
-public final class Goat extends Animal implements Locomotion {
+public class Goat extends Animal implements Locomotion {
 
-  public static java.lang.String CATEGORY;
+    private java.util.ArrayList<Animal> array;
 
-  public Goat(java.lang.String arg1)
-  }
+    public Goat(String arg1) {
+    }
 
-  public lul(java.util.ArrayList<java.lang.Integer> arg1) {
-  }
+    public void method(ArrayList<java.lang.Integer> arg1) {
+    }
 
-  protected getSound() {
-  }
+    public String getLocomotion() {
+    }
 
-  public getLocomotion() {
-  }
+    protected String getSound() {
+    }
 
-  public eats() {
-  }
+    public String eats() {
+    }
 
-  public getName() {
-  }
+    public ArrayList<java.lang.Integer> getName() {
+    }
+
+    public static class RollingInTheDeep {
+
+        public RollingInTheDeep() {
+        }
+
+        public static class Test {
+
+            public Test() {
+            }
+
+        }
+
+    }
+
+}
 
