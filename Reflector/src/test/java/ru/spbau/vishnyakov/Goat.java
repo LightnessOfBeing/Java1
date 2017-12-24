@@ -2,6 +2,10 @@ package ru.spbau.vishnyakov;
 
 import java.util.ArrayList;
 
+/**
+ * For testing purposes.
+ */
+
 public class Goat extends Animal implements Locomotion {
 
     private ArrayList<Animal> array;

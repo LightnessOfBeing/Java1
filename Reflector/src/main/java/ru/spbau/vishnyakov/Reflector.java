@@ -76,8 +76,8 @@ public class Reflector {
 
     /**
      * Prints superclass of a given class.
-     * @param writer
-     * @param clazz
+     * @param writer represents writing object.
+     * @param clazz which superclass we want to print.
      * @param recursionLevel needed to maintain proper indentation level.
      */
 
@@ -91,7 +91,7 @@ public class Reflector {
 
     /**
      * Method that prints all interfaces that are implemented by this class.
-     * @param writer
+     * @param writer represents writing object.
      * @param clazz which interfaces we want to print.
      * @param recursionLevel needed to maintain proper indentation level.
      */
@@ -112,7 +112,7 @@ public class Reflector {
 
     /**
      * Print signature of a class.
-     * @param writer
+     * @param writer represents writing object.
      * @param clazz which signature we want to print.
      * @param recursionLevel needed to maintain proper indentation level.
      */
@@ -137,8 +137,8 @@ public class Reflector {
 
     /**
      * Prints all constructor of a given class.
-     * @param writer
-     * @param clazz
+     * @param writer represents writing object.
+     * @param clazz which constructor we want to print.
      * @param recursionLevel needed to maintain proper indentation level.
      */
 
@@ -174,7 +174,7 @@ public class Reflector {
 
     /**
      * Prints all fields of a given class.
-     * @param writer
+     * @param writer represents writing object.
      * @param clazz which fields we want to print.
      * @param recursionLevel needed to maintain proper indentation level.
      */
@@ -193,10 +193,9 @@ public class Reflector {
 
     /**
      * Print all methods of a given class.
-     * @param writer
-     * @param clazz
+     * @param writer represents writing object.
+     * @param clazz which methods we want to print.
      * @param recursionLevel needed to maintain proper indentation level.
-     * @throws IOException
      */
 
     public static void printMethods(Writer writer, Class<?> clazz, Integer recursionLevel) throws IOException {
@@ -243,11 +242,10 @@ public class Reflector {
     }
 
     /**
-     *
-     * @param writer
-     * @param clazz
+     * Prints all inner classes in recursive order maintaing correct indent level.
+     * @param writer represents writing object.
+     * @param clazz which inner classes we want to print.
      * @param recursionLevel needed to maintain proper indentation level.
-     * @throws IOException
      */
 
     public static void printClasses(Writer writer, Class<?> clazz, Integer recursionLevel) throws IOException {
@@ -258,14 +256,14 @@ public class Reflector {
     }
 
     /**
-     *
-     * @param firstClass
-     * @param secondClass
+     * Writes all fields that are present in one class and not present in another.
+     * @param firstClass we want to compare with the second class.
+     * @param secondClass we want to compare wit the first class.
      */
 
     public static void diffFields(Class<?> firstClass, Class<?> secondClass) {
-        Set<String> firstClassFields = Arrays.stream(firstClass.getDeclaredFields()).map(p -> p.toString()).collect(Collectors.toSet());
-        Set<String> secondClassFields = Arrays.stream(secondClass.getDeclaredFields()).map(p -> p.toString()).collect(Collectors.toSet());
+        Set<String> firstClassFields = Arrays.stream(firstClass.getDeclaredFields()).map(Field::toString).collect(Collectors.toSet());
+        Set<String> secondClassFields = Arrays.stream(secondClass.getDeclaredFields()).map(Field::toString).collect(Collectors.toSet());
         System.out.println("Unique fields in " + firstClass.getSimpleName() + " class are:\n");
         System.out.println(firstClassFields.stream().filter(p -> !secondClassFields.contains(p)).collect(Collectors.joining("\n")));
         System.out.println("Unique fields in " + secondClass.getSimpleName() + " class are:\n");
@@ -273,16 +271,27 @@ public class Reflector {
     }
 
     /**
-     *
-     * @param firstClass
-     * @param secondClass
+     * Writes all methods that are present in one class and not present in another class.
+     * @param firstClass we want to compare with the second class.
+     * @param secondClass we want to compare wit the first class.
      */
 
     public static void diffMethods(Class<?> firstClass, Class<?> secondClass) {
-        Set<String> firstClassMethods = Arrays.stream(firstClass.getDeclaredMethods()).map(p -> p.toString()).collect(Collectors.toSet());
-        Set<String> secondClassMethods = Arrays.stream(secondClass.getDeclaredMethods()).map(p -> p.toString()).collect(Collectors.toSet());
+        Set<String> firstClassMethods = Arrays.stream(firstClass.getDeclaredMethods()).map(Method::toString).collect(Collectors.toSet());
+        Set<String> secondClassMethods = Arrays.stream(secondClass.getDeclaredMethods()).map(Method::toString).collect(Collectors.toSet());
         System.out.println("Unique methods in " + firstClass.getSimpleName() + " class are:\n");
         System.out.println(secondClassMethods.stream().filter(p -> !firstClassMethods.contains(p)).collect(Collectors.joining("\n")));
         System.out.println("Unique methods in " + secondClass.getSimpleName() + " class are:\n");
+    }
+
+    /**
+     * Prints difference between two classes.
+     * @param firstClass we want to compare with the second class.
+     * @param secondClass we want to compare wit the first class.
+     */
+
+    public static void diffClasses(Class<?> firstClass, Class<?> secondClass) {
+        diffFields(firstClass, secondClass);
+        diffMethods(firstClass, secondClass);
     }
 }

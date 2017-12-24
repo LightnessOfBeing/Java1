@@ -10,10 +10,10 @@ public class Goat extends Animal implements Locomotion {
     public void method(ArrayList<java.lang.Integer> arg1) {
     }
 
-    public String getLocomotion() {
+    protected String getSound() {
     }
 
-    protected String getSound() {
+    public String getLocomotion() {
     }
 
     public String eats() {

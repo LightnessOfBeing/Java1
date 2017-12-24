@@ -1,6 +1,9 @@
 package ru.spbau.vishnyakov;
 
-import java.util.ArrayList;
+/**
+ * For testing purposes.
+ * @param <E> for test.
+ */
 
 public abstract class Animal<E> implements Eating {
 
