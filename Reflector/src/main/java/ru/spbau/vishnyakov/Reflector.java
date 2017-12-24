@@ -1,5 +1,7 @@
 package ru.spbau.vishnyakov;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
@@ -14,7 +16,7 @@ public class Reflector {
     /**
      * Represents indent.
      */
-
+    @NotNull
     private static final String INDENT = "    ";
 
     /**
@@ -24,7 +26,7 @@ public class Reflector {
      * @param recursionLevel needed to maintain proper indentation level.
      */
 
-    public static void printClass(Writer writer, Class<?> clazz, Integer recursionLevel) throws IOException {
+    public static void printClass(@NotNull Writer writer, @NotNull Class<?> clazz, Integer recursionLevel) throws IOException {
         printClassSignature(writer, clazz, recursionLevel);
         printFields(writer, clazz, recursionLevel);
         printConstructors(writer, clazz, recursionLevel);
@@ -40,7 +42,7 @@ public class Reflector {
      * @param recursionLevel needed to maintain proper indentation level.
      */
 
-    public static void printIndent(Writer writer, Integer recursionLevel) throws IOException {
+    public static void printIndent(@NotNull Writer writer, Integer recursionLevel) throws IOException {
         for (int i = 0; i < recursionLevel; i++) {
             writer.write(INDENT);
         }
@@ -51,7 +53,7 @@ public class Reflector {
      * @param clazz which we want to print.
      */
 
-    public static void printStructure(Class<?> clazz) {
+    public static void printStructure(@NotNull Class<?> clazz) {
         try {
             try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(clazz.getSimpleName() + ".java"), "utf-8"))) {
@@ -70,7 +72,7 @@ public class Reflector {
      * @return string without redundant prefixes.
      */
 
-    public static String getOnlyClassName(String forRemove, String className) {
+    public static String getOnlyClassName(String forRemove, @NotNull String className) {
         return className.replace(forRemove + ".","");
     }
 
@@ -81,7 +83,7 @@ public class Reflector {
      * @param recursionLevel needed to maintain proper indentation level.
      */
 
-    public static void printSuperClass(Writer writer, Class<?> clazz, Integer recursionLevel) throws IOException {
+    public static void printSuperClass(@NotNull Writer writer, @NotNull Class<?> clazz, Integer recursionLevel) throws IOException {
         Class<?> superClazz = clazz.getSuperclass();
         if (superClazz != null && !superClazz.equals(Object.class)) {
             Type t = clazz.getGenericSuperclass();
@@ -96,7 +98,7 @@ public class Reflector {
      * @param recursionLevel needed to maintain proper indentation level.
      */
 
-    public static void printInterfaces(Writer writer, Class<?> clazz, Integer recursionLevel) throws IOException {
+    public static void printInterfaces(@NotNull Writer writer, @NotNull Class<?> clazz, Integer recursionLevel) throws IOException {
         Type[] interfaces = clazz.getInterfaces();
         if (interfaces.length != 0) {
             writer.write("implements ");
@@ -117,7 +119,7 @@ public class Reflector {
      * @param recursionLevel needed to maintain proper indentation level.
      */
 
-    public static void printClassSignature(Writer writer, Class<?> clazz, Integer recursionLevel) throws IOException {
+    public static void printClassSignature(@NotNull Writer writer, @NotNull Class<?> clazz, Integer recursionLevel) throws IOException {
         String modifiers = Modifier.toString(clazz.getModifiers());
 
         printIndent(writer, recursionLevel);
@@ -142,7 +144,7 @@ public class Reflector {
      * @param recursionLevel needed to maintain proper indentation level.
      */
 
-    public static void printConstructors(Writer writer, Class<?> clazz, Integer recursionLevel) throws IOException {
+    public static void printConstructors(@NotNull Writer writer, @NotNull Class<?> clazz, Integer recursionLevel) throws IOException {
         Constructor[] constructors = clazz.getDeclaredConstructors();
 
         for (Constructor constructor : constructors) {
@@ -179,7 +181,7 @@ public class Reflector {
      * @param recursionLevel needed to maintain proper indentation level.
      */
 
-    public static void printFields(Writer writer, Class<?> clazz, Integer recursionLevel) throws IOException {
+    public static void printFields(@NotNull Writer writer, @NotNull Class<?> clazz, Integer recursionLevel) throws IOException {
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
             String modifiers = Modifier.toString(field.getModifiers());
@@ -198,7 +200,7 @@ public class Reflector {
      * @param recursionLevel needed to maintain proper indentation level.
      */
 
-    public static void printMethods(Writer writer, Class<?> clazz, Integer recursionLevel) throws IOException {
+    public static void printMethods(@NotNull Writer writer, @NotNull Class<?> clazz, Integer recursionLevel) throws IOException {
         Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
             String modifiers = Modifier.toString(method.getModifiers());
@@ -248,7 +250,7 @@ public class Reflector {
      * @param recursionLevel needed to maintain proper indentation level.
      */
 
-    public static void printClasses(Writer writer, Class<?> clazz, Integer recursionLevel) throws IOException {
+    public static void printClasses(@NotNull Writer writer, @NotNull Class<?> clazz, Integer recursionLevel) throws IOException {
         Class[] classes = clazz.getDeclaredClasses();
         for (Class clazzz : classes) {
             printClass(writer, clazzz, recursionLevel + 1);
@@ -261,7 +263,7 @@ public class Reflector {
      * @param secondClass we want to compare wit the first class.
      */
 
-    public static void diffFields(Class<?> firstClass, Class<?> secondClass) {
+    public static void diffFields(@NotNull Class<?> firstClass, @NotNull Class<?> secondClass) {
         Set<String> firstClassFields = Arrays.stream(firstClass.getDeclaredFields()).map(Field::toString).collect(Collectors.toSet());
         Set<String> secondClassFields = Arrays.stream(secondClass.getDeclaredFields()).map(Field::toString).collect(Collectors.toSet());
         System.out.println("Unique fields in " + firstClass.getSimpleName() + " class are:\n");
@@ -276,7 +278,7 @@ public class Reflector {
      * @param secondClass we want to compare wit the first class.
      */
 
-    public static void diffMethods(Class<?> firstClass, Class<?> secondClass) {
+    public static void diffMethods(@NotNull Class<?> firstClass, @NotNull Class<?> secondClass) {
         Set<String> firstClassMethods = Arrays.stream(firstClass.getDeclaredMethods()).map(Method::toString).collect(Collectors.toSet());
         Set<String> secondClassMethods = Arrays.stream(secondClass.getDeclaredMethods()).map(Method::toString).collect(Collectors.toSet());
         System.out.println("Unique methods in " + firstClass.getSimpleName() + " class are:\n");
@@ -290,7 +292,7 @@ public class Reflector {
      * @param secondClass we want to compare wit the first class.
      */
 
-    public static void diffClasses(Class<?> firstClass, Class<?> secondClass) {
+    public static void diffClasses(@NotNull Class<?> firstClass, @NotNull Class<?> secondClass) {
         diffFields(firstClass, secondClass);
         diffMethods(firstClass, secondClass);
     }

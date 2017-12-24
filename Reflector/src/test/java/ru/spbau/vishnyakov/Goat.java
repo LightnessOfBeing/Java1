@@ -1,5 +1,7 @@
 package ru.spbau.vishnyakov;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 /**
@@ -10,16 +12,19 @@ public class Goat extends Animal implements Locomotion {
 
     private ArrayList<Animal> array;
 
+    @NotNull
     @Override
     protected java.lang.String getSound() {
         return "aaa";
     }
 
+    @NotNull
     @Override
     public String getLocomotion() {
         return "walks";
     }
 
+    @NotNull
     @Override
     public String eats() {
         return "grass";
@@ -29,6 +34,7 @@ public class Goat extends Animal implements Locomotion {
         this.name = name;
     }
 
+    @NotNull
     public ArrayList<Integer> getName() {
         return new ArrayList<>();
     }
