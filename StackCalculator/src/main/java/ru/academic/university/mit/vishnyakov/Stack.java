@@ -28,8 +28,8 @@ public class Stack<T> {
      * Class that represents nodes.
      */
 
-    private class Node {
-        private T T;
+    private static class Node<T> {
+        private T element;
         @Nullable
         private Node next;
     }
@@ -69,7 +69,7 @@ public class Stack<T> {
     public void push(T T) {
         Node old = first;
         first = new Node();
-        first.T = T;
+        first.element = T;
         first.next = old;
         n++;
     }
@@ -85,7 +85,7 @@ public class Stack<T> {
             throw new NoSuchElementException("Stack underflow");
         }
         assert first != null;
-        T e = first.T;
+        T e = (T) first.element;
         first = first.next;
         n--;
         return e;
@@ -102,7 +102,7 @@ public class Stack<T> {
             throw new NoSuchElementException("Stack underflow");
         }
         assert first != null;
-        return first.T;
+        return (T) first.element;
     }
 
     /**
