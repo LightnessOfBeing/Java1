@@ -2,8 +2,10 @@ package ru.spbau.mit.vishnyakov;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,17 +17,14 @@ public final class SecondPartTasks {
 
     // Найти строки из переданных файлов, в которых встречается указанная подстрока.
     public static List<String> findQuotes(@NotNull List<String> paths, @NotNull CharSequence sequence) throws IOException {
-        Stream<String> st = null;
-        for (String cur : paths) {
-            if (st == null) {
-                st = Files.lines(Paths.get(cur));
+        return paths.stream().map(Paths::get).flatMap(path -> {
+            try {
+                return Files.lines(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return Stream.empty();
             }
-            else {
-                st = Stream.concat(st, Files.lines(Paths.get(cur)));
-            }
-        }
-        assert st != null;
-        return st.filter(p -> p.contains(sequence)).collect(Collectors.toList());
+        }).filter(p -> p.contains(sequence)).collect(Collectors.toList());
     }
 
     // В квадрат с длиной стороны 1 вписана мишень.
@@ -60,9 +59,16 @@ public final class SecondPartTasks {
 
     private static class Point {
         /**
-         * X and Y coordinates.
+         * X coordinate.
          */
-        double x, y;
+
+        private double x;
+
+        /**
+         * Y coordinate.
+         */
+
+        private double y;
 
         /**
          * Constructor that receives a point.
@@ -70,16 +76,16 @@ public final class SecondPartTasks {
          * @param s -- y coordinate.
          */
 
-        Point(double f, double s) {
+        private Point(double f, double s) {
             x = f;
             y = s;
         }
 
-        double getX() {
+        private double getX() {
             return x;
         }
 
-        double getY() {
+        private double getY() {
             return y;
         }
     }
