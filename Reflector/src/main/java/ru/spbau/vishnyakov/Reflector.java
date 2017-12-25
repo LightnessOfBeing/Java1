@@ -4,6 +4,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.lang.reflect.*;
+import java.text.FieldPosition;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -258,18 +260,76 @@ public class Reflector {
     }
 
     /**
-     * Writes all fields that are present in one class and not present in another.
+     * Prints all fields that are present in one class and not present in another.
      * @param firstClass we want to compare with the second class.
      * @param secondClass we want to compare wit the first class.
      */
 
     public static void diffFields(@NotNull Class<?> firstClass, @NotNull Class<?> secondClass) {
-        Set<String> firstClassFields = Arrays.stream(firstClass.getDeclaredFields()).map(Field::toString).collect(Collectors.toSet());
-        Set<String> secondClassFields = Arrays.stream(secondClass.getDeclaredFields()).map(Field::toString).collect(Collectors.toSet());
-        System.out.println("Unique fields in " + firstClass.getSimpleName() + " class are:\n");
-        System.out.println(firstClassFields.stream().filter(p -> !secondClassFields.contains(p)).collect(Collectors.joining("\n")));
-        System.out.println("Unique fields in " + secondClass.getSimpleName() + " class are:\n");
-        System.out.println(secondClassFields.stream().filter(p -> !firstClassFields.contains(p)).collect(Collectors.joining("\n")));
+        HashSet<Field> first = new HashSet<>();
+        HashSet<Field> second = new HashSet<>();
+        Field[] firstClassFields = firstClass.getDeclaredFields();
+        Field[] secondClassFields = secondClass.getDeclaredFields();
+        for (Field firstField : firstClassFields) {
+            for (Field secondField : secondClassFields) {
+                if (compareTypes(firstField.getGenericType(), secondField.getGenericType())
+                        && firstField.getName().equals(secondField.getName())) {
+                    first.add(firstField);
+                    second.add(secondField);
+                }
+            }
+        }
+        printUniqueFields(first, firstClass);
+        printUniqueFields(second, secondClass);
+    }
+
+    /**
+     * Prints all unique fields of one class.
+     * @param set that contains field name.
+     * @param clazz which fields we want to print.
+     */
+
+    public static void printUniqueFields(@NotNull HashSet<Field> set, @NotNull Class<?> clazz) {
+        Field[] arrayOfFields = clazz.getDeclaredFields();
+        if (set.size() != arrayOfFields.length) {
+            System.out.println("Unique fields in " + clazz.getName() + " are:\n");
+            for (Field f : arrayOfFields) {
+                if (!set.contains(f)) {
+                    System.out.println(f.getName() + "\n");
+                }
+            }
+        }
+        else {
+            System.out.println("There is no unique fields in " + clazz.getName() + "\n\n");
+        }
+    }
+
+    /**
+     * Compares types of two different fields.
+     * @param t1 type of the first field.
+     * @param t2 type of the second field.
+     * @return result of comparison.
+     */
+
+    public static boolean compareTypes(@NotNull Type t1, @NotNull Type t2) {
+        String s1 = deleteExtends(t1.getTypeName());
+        String s2 = deleteExtends(t2.getTypeName());
+        return s1.equals(s2);
+    }
+
+    /**
+     * Handles comparison between E extends Object and E.
+     * @param typeName name of type.
+     * @return corrected typename.
+     */
+
+    @NotNull
+    public static String deleteExtends(@NotNull String typeName) {
+        int index = typeName.indexOf("extends Object");
+        if (index != -1) {
+            return typeName.substring(0, index) + typeName.substring(index + 13, typeName.length());
+        }
+        return typeName;
     }
 
     /**
@@ -279,11 +339,63 @@ public class Reflector {
      */
 
     public static void diffMethods(@NotNull Class<?> firstClass, @NotNull Class<?> secondClass) {
-        Set<String> firstClassMethods = Arrays.stream(firstClass.getDeclaredMethods()).map(Method::toString).collect(Collectors.toSet());
-        Set<String> secondClassMethods = Arrays.stream(secondClass.getDeclaredMethods()).map(Method::toString).collect(Collectors.toSet());
-        System.out.println("Unique methods in " + firstClass.getSimpleName() + " class are:\n");
-        System.out.println(secondClassMethods.stream().filter(p -> !firstClassMethods.contains(p)).collect(Collectors.joining("\n")));
-        System.out.println("Unique methods in " + secondClass.getSimpleName() + " class are:\n");
+        HashSet<Method> first = new HashSet<>();
+        HashSet<Method> second = new HashSet<>();
+        Method[] firstClassMethods = firstClass.getDeclaredMethods();
+        Method[] secondClassMethods = secondClass.getDeclaredMethods();
+        for (Method firstMethod : firstClassMethods) {
+            for (Method secondMethod : secondClassMethods) {
+                if (compareMethods(firstMethod, secondMethod)) {
+                    first.add(firstMethod);
+                    second.add(secondMethod);
+                }
+            }
+        }
+        printUniqueMethods(first, firstClass);
+        printUniqueMethods(second, secondClass);
+    }
+
+    /**
+     * Prints unique methods in each class.
+     * @param set of non-unique methods.
+     * @param clazz which methods we want to print.
+     */
+
+    public static void printUniqueMethods(@NotNull HashSet<Method> set, @NotNull Class<?> clazz) {
+        Method[] arrayOfMethods = clazz.getDeclaredMethods();
+        if (set.size() != arrayOfMethods.length) {
+            System.out.println("Unique methods in " + clazz.getName() + " are:\n");
+            for (Method f : arrayOfMethods) {
+                if (!set.contains(f)) {
+                    System.out.println(f.getName() + "\n");
+                }
+            }
+        }
+        else {
+            System.out.println("There is no unique fields in " + clazz.getName() + "\n\n");
+        }
+    }
+
+    /**
+     * Compares two methods.
+     * @param m1 first method to compare.
+     * @param m2 second method to compare.
+     * @return result of comparison.
+     */
+
+    public static boolean compareMethods(@NotNull Method m1, @NotNull Method m2) {
+        if (!compareTypes(m1.getGenericReturnType(), m2.getGenericReturnType())) {
+            return false;
+        }
+        if (m1.getGenericParameterTypes().length != m2.getGenericParameterTypes().length) {
+            return false;
+        }
+        for (int i = 0; i < m1.getGenericParameterTypes().length; i++) {
+            if (!compareTypes(m1.getGenericParameterTypes()[i], m2.getGenericParameterTypes()[i])) {
+                return false;
+            }
+        }
+        return m1.getName().equals(m2.getName());
     }
 
     /**
